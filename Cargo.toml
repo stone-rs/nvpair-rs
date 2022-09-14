@@ -1,7 +1,11 @@
 [package]
 name = "nvpair-rs"
+authors = ["Lack <598223084@qq.com>"]
+repository = "https://github.com/stone-rs/nvpair-rs"
+documentation = "https://docs.rs/nvpair-rs"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
 readme = "README.md"
 
 [workspace]
