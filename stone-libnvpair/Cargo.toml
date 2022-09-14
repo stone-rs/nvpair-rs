@@ -2,6 +2,7 @@
 name = "stone-libnvpair"
 version = "0.2.0"
 edition = "2021"
+license = "MIT"
 authors = ["Lack <598223084@qq.com>"]
 
 [dependencies]

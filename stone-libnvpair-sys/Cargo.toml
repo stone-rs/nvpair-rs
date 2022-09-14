@@ -3,6 +3,7 @@ name = "stone-libnvpair-sys"
 version = "0.2.0"
 edition = "2021"
 authors = ["Lack <598223084@qq.com>"]
+license = "MIT"
 build = "build.rs"
 readme = "README.md"
 
