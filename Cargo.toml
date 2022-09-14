@@ -20,4 +20,4 @@ members = [
 libc = "0.2"
 thiserror = "1.0"
 
-stone-libnvpair = { path = "stone-libnvpair" }
+stone-libnvpair = { version = "0.2", path = "stone-libnvpair" }
