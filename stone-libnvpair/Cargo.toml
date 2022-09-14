@@ -4,6 +4,8 @@ version = "0.2.0"
 edition = "2021"
 license = "MIT"
 authors = ["Lack <598223084@qq.com>"]
+description = "Low-level libnvpair interface"
+repository = "https://github.com/stone-rs/nvpair-rs/stone-libnvpair"
 
 [dependencies]
 libc = "0.2"
