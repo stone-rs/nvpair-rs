@@ -13,7 +13,7 @@
 #![warn(unused)]
 #![deny(warnings)]
 
-use libnvpair;
+use stone_libnvpair as libnvpair;
 pub use libnvpair::data_type_t;
 pub use libnvpair::NvListError;
 

@@ -12,12 +12,12 @@ readme = "README.md"
 
 [workspace]
 members = [
-    "libnvpair-sys",
-    "libnvpair",
+    "stone-libnvpair-sys",
+    "stone-libnvpair",
 ]
 
 [dependencies]
 libc = "0.2"
 thiserror = "1.0"
 
-libnvpair = { path = "libnvpair" }
+stone-libnvpair = { path = "stone-libnvpair" }

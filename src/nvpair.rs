@@ -5,7 +5,7 @@ use std::ptr;
 use std::slice;
 
 use super::*;
-use libnvpair;
+use stone_libnvpair as libnvpair;
 
 /// Safe idiomatic nvpair_t wrapper.
 ///

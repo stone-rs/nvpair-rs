@@ -2,7 +2,7 @@ use std::ffi;
 use std::marker::{PhantomData, Send};
 use std::ops;
 
-use libnvpair;
+use stone_libnvpair as libnvpair;
 
 use super::*;
 

@@ -16,7 +16,7 @@
 
 //! This module mostly re-exports things from its -sys counterpart and adds
 //! very simple ergonomic helpers
-use libnvpair_sys as sys;
+use stone_libnvpair_sys as sys;
 
 pub use sys::boolean_t;
 pub use sys::data_type_t;

@@ -1,4 +1,4 @@
-use libnvpair;
+use stone_libnvpair as libnvpair;
 
 use super::{NvList, NvPair};
 

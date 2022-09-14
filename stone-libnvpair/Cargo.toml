@@ -1,0 +1,11 @@
+[package]
+name = "stone-libnvpair"
+version = "0.2.0"
+edition = "2021"
+authors = ["Lack <598223084@qq.com>"]
+
+[dependencies]
+libc = "0.2"
+thiserror = "1.0"
+
+stone-libnvpair-sys = { path = "../stone-libnvpair-sys" }
