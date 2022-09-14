@@ -11,4 +11,4 @@ repository = "https://github.com/stone-rs/nvpair-rs/stone-libnvpair"
 libc = "0.2"
 thiserror = "1.0"
 
-stone-libnvpair-sys = { path = "../stone-libnvpair-sys" }
+stone-libnvpair-sys = { version = "0.2", path = "../stone-libnvpair-sys" }
