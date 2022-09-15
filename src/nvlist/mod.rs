@@ -218,9 +218,12 @@ mod tests {
     fn nvlist_iter() {
         let mut nvlist = NvList::new();
         let arr = [1, 2, 3, 4, 5];
-        nvlist.add_uint16("a", 3).unwrap();
-        nvlist.add_uint32("b", 5).unwrap();
-        nvlist.add_uint8_array("d", &arr).unwrap();
+        nvlist.add_u16_value("a", 3).unwrap();
+        nvlist.add_u32_value("b", 5).unwrap();
+        nvlist.add_u8_array("d", &arr).unwrap();
+
+        let v = nvlist.lookup_u16_value("a").unwrap();
+        assert_eq!(v, Some(3));
 
         let mut iter = dbg!(nvlist).into_iter();
         let pair1 = dbg!(iter.next().unwrap());

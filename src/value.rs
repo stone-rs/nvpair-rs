@@ -58,11 +58,7 @@ pub fn to_value(nvpair: &NvPair) -> Value {
         DATA_TYPE_INT64_ARRAY => Value::I64Array(nvpair.int64_array().to_vec()),
         DATA_TYPE_UINT64_ARRAY => Value::U64Array(nvpair.uint64_array().to_vec()),
         DATA_TYPE_STRING_ARRAY => Value::StringArray(
-            nvpair
-                .string_array()
-                .into_iter()
-                .map(|text| text.into_owned())
-                .collect(),
+            nvpair.string_array().into_iter().map(|text| text.into_owned()).collect(),
         ),
 
         DATA_TYPE_BOOLEAN_VALUE => Value::Boolean(nvpair.boolean() == libnvpair::boolean_t::B_TRUE),

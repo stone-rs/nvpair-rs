@@ -132,15 +132,15 @@ macro_rules! nvlist_add {
 }
 
 nvlist_add!(add_boolean_value, nvlist_add_boolean_value, bool);
-nvlist_add!(add_int8, nvlist_add_int8, i8);
-nvlist_add!(add_uint8, nvlist_add_uint8, u8);
-nvlist_add!(add_int16, nvlist_add_int16, i16);
-nvlist_add!(add_uint16, nvlist_add_uint16, u16);
-nvlist_add!(add_int32, nvlist_add_int32, i32);
-nvlist_add!(add_uint32, nvlist_add_uint32, u32);
-nvlist_add!(add_int64, nvlist_add_int64, i64);
-nvlist_add!(add_uint64, nvlist_add_uint64, u64);
-nvlist_add!(add_f64, nvlist_add_double, f64);
+nvlist_add!(add_i8_value, nvlist_add_int8, i8);
+nvlist_add!(add_u8_value, nvlist_add_uint8, u8);
+nvlist_add!(add_i16_value, nvlist_add_int16, i16);
+nvlist_add!(add_u16_value, nvlist_add_uint16, u16);
+nvlist_add!(add_i32_value, nvlist_add_int32, i32);
+nvlist_add!(add_u32_value, nvlist_add_uint32, u32);
+nvlist_add!(add_i64_value, nvlist_add_int64, i64);
+nvlist_add!(add_u64_value, nvlist_add_uint64, u64);
+nvlist_add!(add_f64_value, nvlist_add_double, f64);
 
 macro_rules! nvlist_add_array {
     ($add:ident, $method:ident, $value:ty) => {
@@ -182,14 +182,14 @@ macro_rules! nvlist_add_array {
     };
 }
 
-nvlist_add_array!(add_int8_array, nvlist_add_int8_array, i8);
-nvlist_add_array!(add_uint8_array, nvlist_add_uint8_array, u8);
-nvlist_add_array!(add_int16_array, nvlist_add_int16_array, i16);
-nvlist_add_array!(add_uint16_array, nvlist_add_uint16_array, u16);
-nvlist_add_array!(add_int32_array, nvlist_add_int32_array, i32);
-nvlist_add_array!(add_uint32_array, nvlist_add_uint32_array, u32);
-nvlist_add_array!(add_int64_array, nvlist_add_int64_array, i64);
-nvlist_add_array!(add_uint64_array, nvlist_add_uint64_array, u64);
+nvlist_add_array!(add_i8_array, nvlist_add_int8_array, i8);
+nvlist_add_array!(add_u8_array, nvlist_add_uint8_array, u8);
+nvlist_add_array!(add_i16_array, nvlist_add_int16_array, i16);
+nvlist_add_array!(add_u16_array, nvlist_add_uint16_array, u16);
+nvlist_add_array!(add_i32_array, nvlist_add_int32_array, i32);
+nvlist_add_array!(add_u32_array, nvlist_add_uint32_array, u32);
+nvlist_add_array!(add_i64_array, nvlist_add_int64_array, i64);
+nvlist_add_array!(add_u64_array, nvlist_add_uint64_array, u64);
 
 impl NvList {
     /// Add named boolean (without value, i.e. always true) to this nvlist
@@ -245,38 +245,52 @@ impl NvList {
         }
     }
 
-    /// 
-    pub fn nvlist_lookup_boolean_value(
-        &self,
-        name: impl AsRef<str>,
-    ) -> Result<Option<bool>, NvListError> {
-        let name = cstring(name).map_err(|_| NvListError::InvalidArgument)?;
-        match unsafe { libnvpair::nvlist_lookup_boolean_value(self.nvl, name.as_ptr()) } {
-            Ok(nvp) => match nvp {
-                libnvpair::boolean_t::B_FALSE => Ok(Some(false)),
-                libnvpair::boolean_t::B_TRUE => Ok(Some(true)),
-            },
-            Err(NvListError::NotFound) => Ok(None),
-            Err(err) => Err(err),
-        }
-    }
-
     /// Iterator over NvPair objects in this NvList
-    pub fn iter(&self) -> Iter<'_, Self> {
-        Iter {
-            nvlist: self.borrow(),
-            nvpair: None,
-        }
-    }
+    pub fn iter(&self) -> Iter<'_, Self> { Iter { nvlist: self.borrow(), nvpair: None } }
 
     /// Iterator over (name, value) items in this NvList
-    pub fn items(&self) -> Items<'_, Self> {
-        Items {
-            nvlist: self.borrow(),
-            nvpair: None,
-        }
-    }
+    pub fn items(&self) -> Items<'_, Self> { Items { nvlist: self.borrow(), nvpair: None } }
 }
+
+macro_rules! nvlist_lookup {
+    ($lookup:ident, $value:ident, $tt:ty) => {
+        impl NvList {
+            pub fn $lookup(&self, name: impl AsRef<str>) -> Result<Option<$tt>, NvListError> {
+                let result = self.lookup_nvpair(name)?;
+                match result {
+                    Some(ref nvp) => {
+                        if let Value::$value(vv) = to_value(nvp) {
+                            return Ok(Some(vv));
+                        }
+                        Ok(None)
+                    },
+                    None => Ok(None),
+                }
+            }
+        }
+    };
+}
+nvlist_lookup!(lookup_boolean_value, Boolean, bool);
+nvlist_lookup!(lookup_boolean_array, BooleanArray, Vec<bool>);
+nvlist_lookup!(lookup_byte_value, U8, u8);
+nvlist_lookup!(lookup_byte_array, U8Array, Vec<u8>);
+nvlist_lookup!(lookup_u16_value, U16, u16);
+nvlist_lookup!(lookup_u16_array, U16Array, Vec<u16>);
+nvlist_lookup!(lookup_u32_value, U32, u32);
+nvlist_lookup!(lookup_u32_array, U32Array, Vec<u32>);
+nvlist_lookup!(lookup_u64_value, U64, u64);
+nvlist_lookup!(lookup_u64_array, U64Array, Vec<u64>);
+nvlist_lookup!(lookup_i8_value, I8, i8);
+nvlist_lookup!(lookup_i8_array, I8Array, Vec<i8>);
+nvlist_lookup!(lookup_i16_value, I16, i16);
+nvlist_lookup!(lookup_i16_array, I16Array, Vec<i16>);
+nvlist_lookup!(lookup_i32_value, I32, i32);
+nvlist_lookup!(lookup_i32_array, I32Array, Vec<i32>);
+nvlist_lookup!(lookup_i64_value, I64, i64);
+nvlist_lookup!(lookup_i64_array, I64Array, Vec<i64>);
+nvlist_lookup!(lookup_string_value, String, String);
+nvlist_lookup!(lookup_string_array, StringArray, Vec<String>);
+nvlist_lookup!(lookup_f64_value, Double, f64);
 
 impl<'a, T> NvListRef<'a, T> {
     /// Add named string to the nvlist
@@ -327,20 +341,10 @@ impl<'a, T> NvListRef<'a, T> {
     }
 
     /// Iterator over NvPair objects in this NvList
-    pub fn iter(&self) -> Iter<'_, Self> {
-        Iter {
-            nvlist: self.borrow(),
-            nvpair: None,
-        }
-    }
+    pub fn iter(&self) -> Iter<'_, Self> { Iter { nvlist: self.borrow(), nvpair: None } }
 
     /// Iterator over (name, value) items in this NvList
-    pub fn items(&self) -> Items<'_, Self> {
-        Items {
-            nvlist: self.borrow(),
-            nvpair: None,
-        }
-    }
+    pub fn items(&self) -> Items<'_, Self> { Items { nvlist: self.borrow(), nvpair: None } }
 }
 
 #[inline]
@@ -378,10 +382,7 @@ where
     let name = cstring(name)?;
     let cstrings = v.iter().map(cstring).collect::<Result<Vec<_>, _>>()?;
     // cstrings needs to live until the end of this function
-    let v = cstrings
-        .iter()
-        .map(|item| item.as_ptr() as *mut libc::c_char)
-        .collect::<Vec<_>>();
+    let v = cstrings.iter().map(|item| item.as_ptr() as *mut libc::c_char).collect::<Vec<_>>();
     let nelem = v.len() as u32;
     unsafe { libnvpair::nvlist_add_string_array(nvl, name.as_ptr(), v.as_ptr(), nelem) }
 }
